@@ -1,0 +1,114 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'shopifake'
+    environment: '${ENV:-dev}'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+# rule_files:
+#   - "alert_rules.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Spring Boot Services - Application metrics
+  - job_name: 'shopifake-gateway'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['gateway:8080']
+        labels:
+          service: 'gateway'
+          type: 'infrastructure'
+
+  - job_name: 'shopifake-access'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-access:8080']
+        labels:
+          service: 'access'
+          type: 'microservice'
+
+  - job_name: 'shopifake-customers'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-customers:8080']
+        labels:
+          service: 'customers'
+          type: 'microservice'
+
+  - job_name: 'shopifake-sites'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-sites:8080']
+        labels:
+          service: 'sites'
+          type: 'microservice'
+
+  - job_name: 'shopifake-catalog'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-catalog:8080']
+        labels:
+          service: 'catalog'
+          type: 'microservice'
+
+  - job_name: 'shopifake-inventory'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-inventory:8080']
+        labels:
+          service: 'inventory'
+          type: 'microservice'
+
+  - job_name: 'shopifake-pricing'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-pricing:8080']
+        labels:
+          service: 'pricing'
+          type: 'microservice'
+
+  - job_name: 'shopifake-orders'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-orders:8080']
+        labels:
+          service: 'orders'
+          type: 'microservice'
+
+  - job_name: 'shopifake-audit'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-audit:8080']
+        labels:
+          service: 'audit'
+          type: 'microservice'
+
+  - job_name: 'shopifake-sales-dashboard'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['shopifake-sales-dashboard:8080']
+        labels:
+          service: 'sales-dashboard'
+          type: 'microservice'
+
+  # System metrics (if node_exporter is deployed)
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+
+  # JVM metrics are automatically exposed by Spring Boot Actuator
+  # No additional configuration needed
+
